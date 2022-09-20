@@ -36,14 +36,16 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {variant === 'on-sale' ? <SaleNotice>Sale</SaleNotice> : variant === 'new-release' ? <ReleaseNotice>Just Released!</ReleaseNotice> : null}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          {salePrice ? <CrossedPrice>{formatPrice(price)}</CrossedPrice> : <Price>{formatPrice(price)}</Price>}
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {salePrice && <SalePrice>{formatPrice(salePrice)}</SalePrice>}
         </Row>
       </Wrapper>
     </Link>
@@ -61,10 +63,35 @@ const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  max-inline-size: 340px;
+`;
+
+const Notice = styled.span`
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  padding: 7px 9px 9px 11px;
+  color: ${COLORS.white};
+  font-size: 14px;
+  font-weight: ${WEIGHTS.medium};
+  border-radius: 2px;
+  block-size: 32px;
+`
+
+const SaleNotice = styled(Notice)`
+  background: ${COLORS.primary};
+`;
+
+const ReleaseNotice = styled(Notice)`
+  background: ${COLORS.secondary};
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -73,6 +100,11 @@ const Name = styled.h3`
 `;
 
 const Price = styled.span``;
+
+const CrossedPrice = styled(Price)`
+  color: ${COLORS.gray[700]};
+  text-decoration: line-through;
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
